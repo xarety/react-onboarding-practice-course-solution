@@ -10,7 +10,7 @@ import { NewsFeedDB } from '../utils/news-feed-db';
 
 export interface INewsFeedApi {
     getAll(): AxiosPromise<Post[]>;
-    create(post: Post): AxiosPromise<EditablePost>;
+    create(post: EditablePost): AxiosPromise<Post>;
     update(id: number, post: EditablePost): AxiosPromise<void>;
     delete(id: number): AxiosPromise<void>;
 }
