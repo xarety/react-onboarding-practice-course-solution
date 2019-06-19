@@ -1,0 +1,17 @@
+.k-filtercell .k-input,
+.k-filtercell select {
+    margin-bottom: 0 !important;
+}
+
+.k-filtercell select {
+    padding: 0 !important;
+}
+
+.k-dateinput .k-input,
+.k-numerictextbox .k-input {
+    margin-bottom: 0 !important;
+}
+
+.k-animation-container {
+    z-index: 1000 !important; 
+}

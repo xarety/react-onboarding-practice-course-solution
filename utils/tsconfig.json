@@ -1,0 +1,15 @@
+﻿{
+    "compilerOptions": {
+        "strict": true,
+        "module": "commonjs",
+        "target": "es2017",
+        "lib": ["es2017"],
+        "moduleResolution": "node",
+        "types": ["node"],
+        "noUnusedParameters": true,
+        "noUnusedLocals": true
+    },
+    "exclude": [
+      "**/__tests__/*"
+    ]
+}

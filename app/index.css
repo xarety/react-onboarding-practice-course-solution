@@ -1,0 +1,18 @@
+@import "~reset-css/reset.css";
+@import "~semantic-ui-css/semantic.min.css";
+@import "~@servicetitan/anvil-fonts/dist/css/anvil-fonts.css";
+@import "~@servicetitan/design-system/dist/system.min.css";
+@import "~@progress/kendo-theme-default/dist/twbs-compat.css";
+@import "./font-awesome/css/font-awesome.min.css";
+@import "./kendo-titanium.css";
+@import "./customized-kendo-titanium.css";
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+i.icon.a-Icon::before {
+  content: normal !important;
+}

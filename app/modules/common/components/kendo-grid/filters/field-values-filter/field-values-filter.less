@@ -1,0 +1,23 @@
+@import (reference) '~@servicetitan/tokens/dist/tokens.less';
+
+.field-values-filter {
+    > :global(.k-multiselect-wrap) {
+        display: flex;
+        height: calc(1.42857em + 10px);
+
+        > :global(.k-searchbar) {
+            > input {
+                border: unset;
+                box-shadow: unset;
+            }
+        }
+    }
+
+    .tag {
+        padding: @spacing-half @spacing-1;
+    }
+}
+
+.field-values-filter-header {
+    padding: @spacing-half @spacing-1;
+}

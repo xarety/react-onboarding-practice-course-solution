@@ -1,0 +1,35 @@
+@import (reference) "~@servicetitan/tokens/dist/tokens";
+
+:global(.modal).confirm-nav {
+    font-family: @base-font-family;
+    max-width: none;
+    height: 246px;
+    width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    left: initial;
+
+    & > :global(.content) {
+        .header {
+            font-size: @typescale-4;
+            font-weight: 600;
+            margin-bottom: @spacing-4;
+        }
+
+        .description {
+            font-size: @typescale-3;
+            color: @color-neutral-200;
+            margin-bottom: @spacing-6;
+        }
+
+        .buttons {
+            position: fixed;
+            bottom: @spacing-3;
+            right: @spacing-3;
+
+            & > span:first-child {
+                margin-right: @spacing-2;
+            }
+        }
+    }
+}

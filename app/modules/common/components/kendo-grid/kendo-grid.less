@@ -1,0 +1,68 @@
+@import (reference) '~@servicetitan/tokens/dist/tokens.less';
+
+/* stylelint-disable no-descending-specificity */
+.grid {
+    &.hide-hierarchy-cell {
+        > :global(.k-widget.k-grid) {
+            > :global(.k-grid-header) {
+                colgroup > :first-child {
+                    display: none;
+                }
+
+                tr {
+                    > :first-child {
+                        display: none;
+
+                        + th {
+                            border-left: none;
+                        }
+                    }
+                }
+            }
+
+            > :global(.k-grid-container > .k-grid-content > * > .k-grid-table) {
+                > colgroup > :first-child {
+                    display: none;
+                }
+
+                > :global(tbody > * > .k-hierarchy-cell) {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    :global(.k-widget.k-grid) {
+        :global(.k-pager-wrap .k-state-selected) {
+            background-color: #ebebeb;
+        }
+
+        :global(.k-master-row) {
+            &:hover,
+            &:global(.k-state-selected) {
+                background-color: @color-blue-100;
+            }
+        }
+
+        :global(.k-grid-header .k-header) {
+            &.active-filter {
+                :global(.k-icon.k-i-more-vertical) {
+                    color: @color-white;
+                    background-color: @color-blue;
+                    border-radius: @border-radius-1;
+                    padding: 2px 0;
+                }
+            }
+
+            :global(a.k-link) {
+                color: @color-black;
+                font-weight: @font-weight-bold;
+
+                &:not(:any-link) {
+                    cursor: default;
+                }
+            }
+        }
+    }
+}
+/* stylelint-enable */
