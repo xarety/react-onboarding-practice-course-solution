@@ -1,14 +1,50 @@
 import * as React from 'react';
-import { HashRouter } from 'react-router-dom';
+import { HashRouter, Switch, Route, Redirect } from 'react-router-dom';
 
-import { Stack, Text } from '@servicetitan/design-system';
+import { provide, useDependencies } from '@servicetitan/react-ioc';
+
+import { observer } from 'mobx-react-lite';
+
+import { Stack } from '@servicetitan/design-system';
+
+import { AuthApi } from './modules/common/api/auth.api';
+
+import { AuthStore } from './modules/common/stores/auth.store';
+
+import { AuthRouter } from './modules/auth/components/auth-router';
+import { Menu } from './modules/common/components/menu';
+import { NewsFeed } from './modules/news-feed/components/news-feed';
+import { ManageUsers } from './modules/manage-users/components/manage-users';
 
 import { getUserConfirmation } from './modules/common/components/confirm-navigation/confirm-navigation';
 
-export const App: React.FC = () => (
-    <HashRouter getUserConfirmation={getUserConfirmation}>
-        <Stack alignItems="center" justifyContent="center" className="flex-auto">
-            <Text size={5}>React Onboarding Practice Course Template</Text>
-        </Stack>
-    </HashRouter>
-);
+export const App: React.FC = provide({ singletons: [AuthApi, AuthStore] })(observer(
+    () => {
+        const [{ isAuthenticated }] = useDependencies(AuthStore);
+
+        return (
+            <HashRouter getUserConfirmation={getUserConfirmation}>
+                <Stack className="flex-auto">
+                    {!isAuthenticated
+                        ? (
+                            <AuthRouter />
+                        ) : (
+                            <React.Fragment>
+                                <Menu className="flex-none" />
+
+                                <Stack.Item fill className="d-f flex-column of-auto">
+                                    <Switch>
+                                        <Route path="/users" component={ManageUsers} />
+                                        <Route path="/news-feed" component={NewsFeed} />
+
+                                        <Redirect from="/*" to="/users" />
+                                    </Switch>
+                                </Stack.Item>
+                            </React.Fragment>
+                        )
+                    }
+                </Stack>
+            </HashRouter>
+        );
+    }
+));
