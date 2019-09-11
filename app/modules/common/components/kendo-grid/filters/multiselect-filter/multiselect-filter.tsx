@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { action, observable } from 'mobx';
 import { Checkbox } from '@servicetitan/design-system';
-import { CheckboxProps } from 'semantic-ui-react';
 import { FilterDescriptor } from '@progress/kendo-data-query';
 import { GridFilterCell, GridFilterCellProps } from '@progress/kendo-react-grid';
 import { GridColumnMenuFilterUIProps } from '@progress/kendo-react-grid/dist/npm/interfaces/GridColumnMenuFilterUIProps';
@@ -10,14 +9,17 @@ import {
     MultiSelect,
     MultiSelectChangeEvent,
     MultiSelectFilterChangeEvent,
-    MultiSelectTagData,
+    MultiSelectTagData
 } from '@progress/kendo-react-dropdowns';
 import { renderCustomColumnMenuFilter } from '../column-menu-filters';
 
 interface RenderWithDataParams<T> {
     data: T[];
     tags?: MultiSelectTagData[];
-    tagRender?: (tagData: MultiSelectTagData, li: React.ReactElement<any>) => React.ReactElement<any> | null;
+    tagRender?: (
+        tagData: MultiSelectTagData,
+        li: React.ReactElement<any>
+    ) => React.ReactElement<any> | null;
     itemRender?: (li: React.ReactElement<any>, itemProps: ListItemProps) => React.ReactNode;
     header?: React.ReactNode;
     footer?: React.ReactNode;
@@ -32,7 +34,7 @@ export abstract class MultiSelectFilterBase<T> extends GridFilterCell {
 
     contains = (item: T, valueList: T[]) => {
         return valueList.includes(item);
-    }
+    };
 
     @action
     protected handleChange = (ev: MultiSelectChangeEvent) => {
@@ -44,14 +46,24 @@ export abstract class MultiSelectFilterBase<T> extends GridFilterCell {
             operator: hasValue ? this.contains : '',
             syntheticEvent: ev.syntheticEvent
         });
-    }
+    };
 
     @action
     protected handleFilterChange = (ev: MultiSelectFilterChangeEvent) => {
         this.filter = ev.filter;
-    }
+    };
 
-    protected renderWithData({ data, tags, tagRender, itemRender, header, footer, isMultiItem, isFilterable, className }: RenderWithDataParams<T>) {
+    protected renderWithData({
+        data,
+        tags,
+        tagRender,
+        itemRender,
+        header,
+        footer,
+        isMultiItem,
+        isFilterable,
+        className
+    }: RenderWithDataParams<T>) {
         return (
             <div className="k-filtercell">
                 <MultiSelect
@@ -80,7 +92,10 @@ export abstract class MultiSelectFilterBase<T> extends GridFilterCell {
  */
 export function singleItemMultiSelectFilter<T>(
     data: T[],
-    tagRender?: (tagData: MultiSelectTagData, li: React.ReactElement<any>) => React.ReactElement<any> | null,
+    tagRender?: (
+        tagData: MultiSelectTagData,
+        li: React.ReactElement<any>
+    ) => React.ReactElement<any> | null,
     itemRender?: (li: React.ReactElement<any>, itemProps: ListItemProps) => React.ReactNode
 ): React.ComponentClass<GridFilterCellProps> {
     return class extends MultiSelectFilterBase<T> {
@@ -100,7 +115,7 @@ export function multiItemMultiSelectFilter<T extends { propName: string }>(
     return class extends MultiSelectFilterBase<T> {
         contains = (item: any, valueList: T[]) => {
             return valueList.some(val => item[val.propName] === true);
-        }
+        };
 
         render() {
             return this.renderWithData({
@@ -150,14 +165,14 @@ export function multiItemMultiSelectColumnMenuFilter<T>(
 
         contains = (item: any) => {
             let res = false;
-            this.selectedItems.forEach((val) => {
+            this.selectedItems.forEach(val => {
                 if (item[val] === true) {
                     res = true;
                     return;
                 }
             });
             return res;
-        }
+        };
 
         isItemChecked = (item: T) => this.selectedItems.has(item);
     }
@@ -166,7 +181,6 @@ export function multiItemMultiSelectColumnMenuFilter<T>(
 }
 
 abstract class MultiSelectFilterUIBase<T> extends React.Component<GridColumnMenuFilterUIProps> {
-
     constructor(
         props: GridColumnMenuFilterUIProps,
         private data: T[],
@@ -174,19 +188,22 @@ abstract class MultiSelectFilterUIBase<T> extends React.Component<GridColumnMenu
     ) {
         super(props);
     }
-    protected selectedItems = this.props.firstFilterProps.value as Set<T> || new Set<T>();
+    protected selectedItems = (this.props.firstFilterProps.value as Set<T>) || new Set<T>();
 
     protected contains = (item: T) => this.selectedItems.has(item);
     protected isItemChecked?: (item: T) => boolean;
 
-    protected onChange = (ev: React.FormEvent<HTMLInputElement>, data: CheckboxProps) => {
+    protected onChange = (
+        value: number,
+        checked: boolean,
+        ev: React.FormEvent<HTMLInputElement>
+    ) => {
         const { firstFilterProps } = this.props;
-        const { checked, value } = data;
 
         if (checked) {
-            this.selectedItems.add(this.data[value as number]);
+            this.selectedItems.add(this.data[value]);
         } else {
-            this.selectedItems.delete(this.data[value as number]);
+            this.selectedItems.delete(this.data[value]);
         }
 
         const hasValue = this.selectedItems.size > 0;
@@ -196,18 +213,21 @@ abstract class MultiSelectFilterUIBase<T> extends React.Component<GridColumnMenu
             operator: hasValue ? this.contains : '',
             syntheticEvent: ev
         });
-    }
+    };
 
     render() {
         return (
             <React.Fragment>
                 {this.data.map((item, index) => (
-                    <React.Fragment>
+                    <React.Fragment key={index}>
                         <Checkbox
-                            key={index}
                             value={index}
                             label={!!this.renderItem ? this.renderItem(item) : item}
-                            checked={!!this.isItemChecked ? this.isItemChecked(item) : this.contains(item)}
+                            checked={
+                                !!this.isItemChecked
+                                    ? this.isItemChecked(item)
+                                    : this.contains(item)
+                            }
                             onChange={this.onChange}
                         />
                         <br />

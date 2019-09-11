@@ -3,7 +3,12 @@ import { injectable } from '@servicetitan/react-ioc';
 import { observable, computed, action } from 'mobx';
 
 import { FormState } from 'formstate';
-import { InputFieldState, TextAreaFieldState, setFormStateValues, formStateToJS } from '../../common/utils/form-helpers';
+import {
+    InputFieldState,
+    TextAreaFieldState,
+    setFormStateValues,
+    formStateToJS
+} from '../../common/utils/form-helpers';
 
 import { Post } from '../api/news-feed.api';
 
@@ -20,10 +25,10 @@ export class EditFormStore {
 
     @computed
     get isDirty() {
-        const { $: { title, description } } = this.form;
-        return this.post
-            ? title.dirty || description.dirty
-            : title.dirty && description.dirty;
+        const {
+            $: { title, description }
+        } = this.form;
+        return this.post ? title.dirty || description.dirty : title.dirty && description.dirty;
     }
 
     @action
@@ -31,10 +36,7 @@ export class EditFormStore {
         if (post) {
             this.post = post;
 
-            setFormStateValues(
-                this.form,
-                post
-            );
+            setFormStateValues(this.form, post);
         }
     }
 

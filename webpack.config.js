@@ -8,14 +8,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = merge({
     target: 'web',
-    entry: [
-        './app/index'
-    ],
+    entry: ['./app/index'],
     resolve: {
-        modules: [
-            'node_modules',
-            path.resolve(__dirname, 'app')
-        ],
+        modules: ['node_modules', path.resolve(__dirname, 'app')],
         extensions: ['.ts', '.tsx', '.js', '.jsx']
     },
     output: {
@@ -31,10 +26,7 @@ module.exports = merge({
             },
             {
                 test: /(\.css)$/,
-                use: [
-                    'style-loader',
-                    'css-loader'
-                ]
+                use: ['style-loader', 'css-loader']
             },
             {
                 test: /\.less$/,
@@ -55,8 +47,14 @@ module.exports = merge({
             { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file-loader' },
             { test: /\.jpg$/, loader: 'file-loader' },
             { test: /\.(woff|woff2|png|gif|otf)$/, loader: 'url-loader?prefix=font/&limit=65000' },
-            { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=65000&mimetype=application/octet-stream' },
-            { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=65000&mimetype=image/svg+xml' }
+            {
+                test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+                loader: 'url-loader?limit=65000&mimetype=application/octet-stream'
+            },
+            {
+                test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+                loader: 'url-loader?limit=65000&mimetype=image/svg+xml'
+            }
         ]
     },
     plugins: [
@@ -67,9 +65,7 @@ module.exports = merge({
             inject: false,
             hash: true
         }),
-        new webpack.WatchIgnorePlugin([
-            /less\.d\.ts$/
-        ])
+        new webpack.WatchIgnorePlugin([/less\.d\.ts$/])
     ],
     devtool: 'cheap-module-source-map',
     devServer: {

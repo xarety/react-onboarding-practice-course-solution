@@ -8,17 +8,11 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "lib": ["es2015", "es2017", "dom", "esnext"],
-        "typeRoots": [
-            "node_modules/@types"
-        ],
+        "typeRoots": ["node_modules/@types"],
         "moduleResolution": "node",
         "noUnusedParameters": true,
         "noUnusedLocals": true
     },
-    "include": [
-        "./app/**/*"
-    ],
-    "exclude": [
-        "node_modules/"
-    ]
+    "include": ["./app/**/*"],
+    "exclude": ["node_modules/"]
 }

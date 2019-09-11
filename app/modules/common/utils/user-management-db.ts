@@ -28,11 +28,7 @@ class UserManagementDB {
     private readonly users: User[];
 
     constructor() {
-        this.users = [
-            John,
-            Mike,
-            Sam
-        ];
+        this.users = [John, Mike, Sam];
     }
 
     getAll() {
@@ -40,17 +36,11 @@ class UserManagementDB {
     }
 
     getByLogin(login: string) {
-        return cloneDeep(
-            this.users.find(
-                user => user.login === login
-            )
-        );
+        return cloneDeep(this.users.find(user => user.login === login));
     }
 
     private getById(id: number) {
-        return this.users.find(
-            user => user.id === id
-        );
+        return this.users.find(user => user.id === id);
     }
 
     create(data: User) {
@@ -68,9 +58,7 @@ class UserManagementDB {
         const user = this.getById(id);
 
         if (user) {
-            return cloneDeep(
-                Object.assign(user, changes)
-            );
+            return cloneDeep(Object.assign(user, changes));
         }
     }
 

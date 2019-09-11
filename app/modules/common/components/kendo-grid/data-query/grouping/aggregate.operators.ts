@@ -17,7 +17,11 @@ export function aggregateBy<T>(
         return initialValue;
     }
 
-    const result = exec(transformers(aggregatesCombinator(descriptors, preprocessors)), initialValue, data);
+    const result = exec(
+        transformers(aggregatesCombinator(descriptors, preprocessors)),
+        initialValue,
+        data
+    );
 
     return expandAggregates(result);
 }

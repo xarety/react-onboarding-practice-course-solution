@@ -19,11 +19,13 @@ export class LoginStore {
 
     @computed
     get isDirty() {
-        const { $: { login, password } } = this.form;
+        const {
+            $: { login, password }
+        } = this.form;
         return login.dirty && password.dirty;
     }
 
-    constructor(@inject(AuthStore) private readonly authStore: AuthStore) { }
+    constructor(@inject(AuthStore) private readonly authStore: AuthStore) {}
 
     @action
     private setError(error: string | undefined) {
@@ -39,9 +41,7 @@ export class LoginStore {
         await this.authStore.login(formStateToJS(this.form));
 
         this.setError(
-            !this.authStore.isAuthenticated
-                ? 'Incorrect username or password.'
-                : undefined
+            !this.authStore.isAuthenticated ? 'Incorrect username or password.' : undefined
         );
 
         return this.authStore.isAuthenticated;

@@ -1,4 +1,6 @@
 import { DatetimeFieldState, FormValues } from './form-helpers';
+import { isObservableArray } from 'mobx';
+import { DateRange } from './date-range';
 
 interface DateRangeFieldStates {
     startDate: DatetimeFieldState;
@@ -10,13 +12,11 @@ const isDefined = (value: FormValues | undefined) => {
         return false;
     }
 
-    if (Array.isArray(value)) {
+    if (Array.isArray(value) || isObservableArray(value)) {
         return !!value.length;
     }
 
-    return typeof value === 'string'
-        ? !!value.trim()
-        : !!value;
+    return typeof value === 'string' ? !!value.trim() : !!value;
 };
 
 export const FormValidators = {
@@ -29,11 +29,14 @@ export const FormValidators = {
     hasNumber: (str: string) => /\d/.test(str),
 
     passwordIsValidFormat: (password: string) =>
-        password.length > 7 && FormValidators.hasLowerCase(password) && FormValidators.hasUpperCase(password) && FormValidators.hasNumber(password),
+        password.length > 7 &&
+        FormValidators.hasLowerCase(password) &&
+        FormValidators.hasUpperCase(password) &&
+        FormValidators.hasNumber(password),
 
     emailFormatIsValid: (email: string) => {
         /* tslint:disable: ter-max-len */
-        const regex = /[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+        const regex = /^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
         return email.length !== 0 && regex.test(email);
     },
 
@@ -43,18 +46,33 @@ export const FormValidators = {
 
     isDateValid: (date: Date | null) => {
         return (
-            !date
-            || date > FormValidators.maxDate
-            || date < FormValidators.minDate
-        ) && 'Please provide a valid date';
+            (!date || date > FormValidators.maxDate || date < FormValidators.minDate) &&
+            'Please provide a valid date'
+        );
     },
 
     isDateRangeValid: (dateRange: DateRangeFieldStates) => {
-        return dateRange.startDate.$
-            && dateRange.endDate.$
-            && dateRange.startDate.$ > dateRange.endDate.$
-            && 'Start Date should not be after End Date';
+        return (
+            dateRange.startDate.$ &&
+            dateRange.endDate.$ &&
+            dateRange.startDate.$ > dateRange.endDate.$ &&
+            'Start Date should not be after End Date'
+        );
     },
 
-    isAlphaNumeric: (str: string) => /^(\w+,?)*$/.test(str)
+    isDateRangeLessThanMaxLength: (maxDays: number) => (val: DateRange | undefined) => {
+        const dayInMillseconds = 1000 * 60 * 60 * 24;
+        return (
+            val &&
+            val.From &&
+            val.To &&
+            (val.To.getTime() - val.From.getTime()) / dayInMillseconds >= maxDays &&
+            `Only ${maxDays} days can be displayed at time`
+        );
+    },
+
+    isAlphaNumeric: (str: string) => /^(\w+,?)*$/.test(str),
+
+    maxLength: (maxLength: number) => (str: string) =>
+        str.length > maxLength && `Value's max length is ${maxLength}`
 };

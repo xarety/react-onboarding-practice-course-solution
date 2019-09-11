@@ -22,12 +22,16 @@ export function groupBy<T>(
 
     const descriptor = descriptors[0];
     const initialValue: any = {}; // TODO: improve typings
-    const view = exec(transformers(groupCombinator(descriptor.field, preprocessors)), initialValue, data);
+    const view = exec(
+        transformers(groupCombinator(descriptor.field, preprocessors)),
+        initialValue,
+        data
+    );
 
     const result: GroupResult[] | T[] = [];
 
-    Object.keys(view).forEach((field) => {
-        Object.keys(view[field]).forEach((value) => {
+    Object.keys(view).forEach(field => {
+        Object.keys(view[field]).forEach(value => {
             const group = view[field][value];
 
             let aggregateResult = {};
@@ -50,9 +54,16 @@ export function groupBy<T>(
             result[group.__position] = {
                 field,
                 aggregates: aggregateResult,
-                items: descriptors.length > 1
-                    ? groupBy(group.items, descriptors.slice(1), preprocessors, identity, filteredData)
-                    : group.items,
+                items:
+                    descriptors.length > 1
+                        ? groupBy(
+                              group.items,
+                              descriptors.slice(1),
+                              preprocessors,
+                              identity,
+                              filteredData
+                          )
+                        : group.items,
                 value: group.value
             };
         });

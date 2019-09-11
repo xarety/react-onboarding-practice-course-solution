@@ -22,7 +22,7 @@ export enum ControlType {
 
 export function selectFilter<T>(
     data: T[],
-    controlType: ControlType = ControlType.ComboBox,
+    controlType: ControlType = ControlType.ComboBox
 ): React.ComponentClass<GridFilterCellProps> {
     @observer
     class SelectFilter extends GridFilterCell {
@@ -45,17 +45,21 @@ export function selectFilter<T>(
                 operator: value ? 'eq' : '',
                 syntheticEvent: ev.syntheticEvent
             });
-        }
+        };
 
         @action
         handleFilterChange = (ev: ComboBoxFilterChangeEvent | DropDownListFilterChangeEvent) => {
             this.filter = ev.filter;
-        }
+        };
 
-        private getControl(type: ControlType): React.ComponentClass<ComboBoxProps> | React.ComponentClass<DropDownListProps> {
+        private getControl(
+            type: ControlType
+        ): React.ComponentClass<ComboBoxProps> | React.ComponentClass<DropDownListProps> {
             switch (type) {
-                case ControlType.ComboBox: return ComboBox;
-                case ControlType.Dropdown: return DropDownList;
+                case ControlType.ComboBox:
+                    return ComboBox;
+                case ControlType.Dropdown:
+                    return DropDownList;
             }
         }
 

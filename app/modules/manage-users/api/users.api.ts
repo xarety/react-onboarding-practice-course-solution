@@ -15,9 +15,7 @@ export interface IUsersApi {
 @injectable()
 export class UsersApi implements IUsersApi {
     getAll(): AxiosPromise<User[]> {
-        return this.resolve(
-            UserManagementDB.getAll()
-        );
+        return this.resolve(UserManagementDB.getAll());
     }
 
     update(id: number, changes: User): AxiosPromise<void> {

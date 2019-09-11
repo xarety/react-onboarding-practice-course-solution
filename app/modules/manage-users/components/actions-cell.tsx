@@ -8,9 +8,9 @@ import { GridCell, GridCellProps } from '@progress/kendo-react-grid';
 
 import { ManageUsersStore } from '../stores/manage-users.store';
 
-import { Confirm, ConfirmationProps } from '../../common/components/confirm/confirm';
+import { Confirm, ConfirmationProps } from '../../common/components/confirm';
 
-export const ActionsCell: React.FC<GridCellProps> = (props) => {
+export const ActionsCell: React.FC<GridCellProps> = props => {
     const [manageUsersStore] = useDependencies(ManageUsersStore);
 
     const { dataItem, rowType } = props;
@@ -26,36 +26,31 @@ export const ActionsCell: React.FC<GridCellProps> = (props) => {
 
     return (
         <td>
-            {dataItem.inEdit ?
-                (
-                    <React.Fragment>
-                        <Button text onClick={handleCancel}>
-                            Cancel
-                        </Button>
+            {dataItem.inEdit ? (
+                <React.Fragment>
+                    <Button text onClick={handleCancel}>
+                        Cancel
+                    </Button>
 
-                        <Button text primary onClick={handleSave}>
-                            Save
-                        </Button>
-                    </React.Fragment>
-                ) : (
-                    <React.Fragment>
-                        <Button text primary onClick={handleEdit}>
-                            Edit
-                        </Button>
+                    <Button text primary onClick={handleSave}>
+                        Save
+                    </Button>
+                </React.Fragment>
+            ) : (
+                <React.Fragment>
+                    <Button text primary onClick={handleEdit}>
+                        Edit
+                    </Button>
 
-                        <Confirm
-                            confirmation={DeleteConfirmation}
-                            onClick={handleDelete}
-                        >
-                            {onClick => (
-                                <Button text negative onClick={onClick}>
-                                    Delete
-                                </Button>
-                            )}
-                        </Confirm>
-                    </React.Fragment>
-                )
-            }
+                    <Confirm confirmation={DeleteConfirmation} onConfirm={handleDelete}>
+                        {onClick => (
+                            <Button text negative onClick={onClick}>
+                                Delete
+                            </Button>
+                        )}
+                    </Confirm>
+                </React.Fragment>
+            )}
         </td>
     );
 };

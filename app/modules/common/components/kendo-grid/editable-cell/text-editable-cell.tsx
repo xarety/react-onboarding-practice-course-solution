@@ -6,25 +6,32 @@ import { Input } from '@progress/kendo-react-inputs';
 
 import { getEditableCell, EditorProps } from './get-editable-cell';
 
-const Editor = observer<React.FC<EditorProps<string>>>(
-    ({ field: { value, onChange, hasError, error } }) => {
-        const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-            onChange(event.target.value);
-        };
+import { Label } from '../../label';
 
-        return (
-            <td>
-                <Input
-                    value={value}
-                    onChange={handleChange}
-                    valid={!hasError}
-                    validationMessage={error}
-                />
-            </td>
-        );
-    }
-);
+export function getTextEditableCell(placeholder?: string) {
+    const Editor = observer<React.FC<EditorProps<string>>>(
+        ({ fieldState: { value, onChange, hasError, error }, className }) => {
+            const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+                onChange(event.target.value);
+            };
 
-export const TextEditableCell = getEditableCell({
-    editor: Editor
-});
+            return (
+                <td className={className}>
+                    <Input
+                        value={value}
+                        onChange={handleChange}
+                        valid={!hasError}
+                        placeholder={placeholder}
+                    />
+                    {hasError && <Label label="" hasError error={error} />}
+                </td>
+            );
+        }
+    );
+
+    return getEditableCell({
+        editor: Editor
+    });
+}
+
+export const TextEditableCell = getTextEditableCell();

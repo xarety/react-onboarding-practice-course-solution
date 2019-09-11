@@ -5,15 +5,22 @@ import { Stack, Icon, Text, Tooltip } from '@servicetitan/design-system';
 import * as Styles from './label.less';
 
 type Direction =
-    | 'top' | 't'
-    | 'right' | 'r'
-    | 'bottom' | 'b'
-    | 'left' | 'l'
-    | 'topleft' | 'tl'
-    | 'topright' | 'tr'
-    | 'bottomleft' | 'bl'
-    | 'bottomright' | 'br'
-    ;
+    | 'top'
+    | 't'
+    | 'right'
+    | 'r'
+    | 'bottom'
+    | 'b'
+    | 'left'
+    | 'l'
+    | 'topleft'
+    | 'tl'
+    | 'topright'
+    | 'tr'
+    | 'bottomleft'
+    | 'bl'
+    | 'bottomright'
+    | 'br';
 
 interface LabelProps {
     label: string;
@@ -28,14 +35,9 @@ export const Label: React.FC<LabelProps> = ({
     tooltip,
     tooltipDirection = 'r',
     hasError,
-    error,
+    error
 }) => (
-    <div
-        className={classNames(
-            Styles.label,
-            hasError && Styles.hasError,
-        )}
-    >
+    <div className={classNames(Styles.label, hasError && Styles.hasError)}>
         <Stack className={Styles.text}>
             <Stack.Item>{label}</Stack.Item>
             {tooltip && (
@@ -47,7 +49,9 @@ export const Label: React.FC<LabelProps> = ({
             )}
         </Stack>
         {hasError && (
-            <Text className={Styles.error} size={1}>{error}</Text>
+            <Text className={Styles.error} size={1}>
+                {error}
+            </Text>
         )}
     </div>
 );

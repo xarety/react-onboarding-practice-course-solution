@@ -5,14 +5,14 @@ import { observer } from 'mobx-react';
 import { observable, computed, Lambda, runInAction, observe, toJS, action } from 'mobx';
 
 import { Checkbox, Link } from '@servicetitan/design-system';
-import { CheckboxProps } from 'semantic-ui-react';
 
 import { Input } from '@progress/kendo-react-inputs';
 import { filterBy } from '@progress/kendo-data-query';
 import { GridColumnMenuFilterUIProps } from '@progress/kendo-react-grid/dist/npm/interfaces/GridColumnMenuFilterUIProps';
 import { ListItemProps, MultiSelectTagData } from '@progress/kendo-react-dropdowns';
 
-import { KendoGridState, DataSource } from '../../kendo-grid-state';
+import { DataSource } from '../../data-sources';
+import { KendoGridState } from '../../kendo-grid-state';
 import { MultiSelectFilterBase } from '../multiselect-filter/multiselect-filter';
 import { renderCustomColumnMenuFilter } from '../column-menu-filters';
 
@@ -37,18 +37,14 @@ export function fieldValuesFilter<T>(
         private disposer?: Lambda;
 
         componentDidMount() {
-            this.disposer = observe(gridState, 'dataSource', async (change) => {
+            this.disposer = observe(gridState, 'dataSource', async change => {
                 const dataSource = change.newValue;
 
-                const items = dataSource ? (await dataSource.getData({})).data as T[] : [];
+                const items = dataSource ? ((await dataSource.getData({})).data as T[]) : [];
 
-                const values = items.map(
-                    v => v[this.props.field! as keyof T]
-                );
+                const values = items.map(v => v[this.props.field! as keyof T]);
 
-                const distinctValues = values.filter(
-                    (v, idx) => values.indexOf(v) === idx
-                ).sort();
+                const distinctValues = values.filter((v, idx) => values.indexOf(v) === idx).sort();
 
                 runInAction(() => {
                     this.data = distinctValues;
@@ -74,7 +70,7 @@ export function fieldValuesFilter<T>(
                     {tagData.text}
                 </li>
             );
-        }
+        };
 
         @action
         handleHeaderClick = (ev: React.MouseEvent) => {
@@ -90,7 +86,7 @@ export function fieldValuesFilter<T>(
                 operator: hasValue ? operator : '',
                 syntheticEvent: ev
             });
-        }
+        };
 
         private getHeader() {
             return this.filteredData.length ? (
@@ -99,7 +95,9 @@ export function fieldValuesFilter<T>(
                         Select all {this.filter && this.filter.value && `"${this.filter.value}"`}
                     </Link>
                 </li>
-            ) : undefined;
+            ) : (
+                undefined
+            );
         }
 
         render() {
@@ -120,37 +118,32 @@ export function fieldValuesFilter<T>(
 
 export function fieldValuesColumnMenuFilter<T>(
     gridState: KendoGridState<T>,
-    renderItem?: (value: T[keyof T]) => string
+    renderItem: (value: T[keyof T]) => string = defaultRenderItem
 ) {
+    type Data = {
+        value: T[keyof T];
+        text: string;
+    };
     @observer
     class FieldValuesColumnMenuFilter extends React.Component<GridColumnMenuFilterUIProps> {
-        @observable data: {
-            value: T[keyof T];
-            text: string;
-        }[] = [];
+        @observable data: Data[] = [];
 
         @observable searchQuery = '';
 
         @computed get processedData() {
             const searchQuery = this.searchQuery.toLowerCase();
 
-            const filteredData = (
-                !searchQuery
-                    ? this.data
-                    : this.data.filter(
-                        v => v.text.toLowerCase().includes(searchQuery)
-                    )
-            );
+            const filteredData = !searchQuery
+                ? this.data
+                : this.data.filter(v => v.text.toLowerCase().includes(searchQuery));
 
-            return filteredData.sort(
-                (a, b) => {
-                    if (a.text === b.text) {
-                        return 0;
-                    }
-
-                    return a.text < b.text ? -1 : 1;
+            return filteredData.sort((a, b) => {
+                if (a.text === b.text) {
+                    return 0;
                 }
-            );
+
+                return a.text < b.text ? -1 : 1;
+            });
         }
 
         @computed get field() {
@@ -174,21 +167,12 @@ export function fieldValuesColumnMenuFilter<T>(
 
             const items = (await dataSource.getData({})).data as T[];
 
-            const values = items.map(
-                i => i[this.field]
-            );
+            const values = items.map(i => i[this.field]);
 
-            const distinctValues = values.filter(
-                (v, idx) => values.indexOf(v) === idx
-            );
+            const distinctValues = values.filter((v, idx) => values.indexOf(v) === idx);
 
             runInAction(() => {
-                this.data = distinctValues.map(
-                    v => ({
-                        value: v,
-                        text: renderItem ? renderItem(v) : v.toString()
-                    })
-                );
+                this.data = distinctValues.map(value => ({ value, text: renderItem(value) }));
             });
         }
 
@@ -199,19 +183,14 @@ export function fieldValuesColumnMenuFilter<T>(
         @action
         handleSearchQueryChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
             this.searchQuery = ev.target.value;
-        }
+        };
 
-        handleChange = (ev: React.FormEvent<HTMLInputElement>, data: CheckboxProps) => {
+        handleChange = (value: Data, checked: boolean, ev: React.FormEvent<HTMLInputElement>) => {
             const { firstFilterProps: filter } = this.props;
-            const { checked, item } = data;
 
-            const newFilterValue = (
-                checked
-                    ? this.value.concat(item.value)
-                    : this.value.filter(
-                        (v: T[keyof T]) => v !== item.value
-                    )
-            );
+            const newFilterValue = checked
+                ? this.value.concat(value.value)
+                : this.value.filter((v: T[keyof T]) => v !== value.value);
 
             const hasValue = newFilterValue.length > 0;
 
@@ -220,7 +199,7 @@ export function fieldValuesColumnMenuFilter<T>(
                 operator: hasValue ? operator : '',
                 syntheticEvent: ev
             });
-        }
+        };
 
         render() {
             return (
@@ -234,10 +213,10 @@ export function fieldValuesColumnMenuFilter<T>(
                     {this.processedData.map(item => (
                         <div key={JSON.stringify(item)}>
                             <Checkbox
-                                item={item}
                                 label={item.text}
                                 checked={this.value.includes(item.value)}
                                 onChange={this.handleChange}
+                                value={item}
                             />
                         </div>
                     ))}
@@ -247,4 +226,13 @@ export function fieldValuesColumnMenuFilter<T>(
     }
 
     return renderCustomColumnMenuFilter(FieldValuesColumnMenuFilter);
+}
+
+function defaultRenderItem(v: any): string {
+    if (v == null) {
+        return '';
+    }
+
+    // suppose v has toString();
+    return v.toString();
 }

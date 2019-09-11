@@ -1,22 +1,19 @@
 import * as React from 'react';
 
-import { Checkbox } from '@servicetitan/design-system';
-import { CheckboxProps } from 'semantic-ui-react';
+import { Radio } from '@servicetitan/design-system';
 
 import { GridFilterCell } from '@progress/kendo-react-grid';
 
 import * as Styles from './boolean-filter.less';
 
 export class BooleanFilter extends GridFilterCell {
-    handleChange = (event: React.FormEvent<HTMLInputElement>, data: CheckboxProps) => {
-        const value = !!data.value;
-
+    handleChange = (value: boolean, event: React.FormEvent<HTMLInputElement>) => {
         this.props.onChange({
             value,
             operator: 'eq',
             syntheticEvent: event
         });
-    }
+    };
 
     handleClear = (event: React.MouseEvent) => {
         this.props.onChange({
@@ -24,24 +21,22 @@ export class BooleanFilter extends GridFilterCell {
             operator: '',
             syntheticEvent: event
         });
-    }
+    };
 
     render() {
         return (
             <div className={Styles.booleanFilter}>
-                <Checkbox
+                <Radio
                     label="True"
-                    value={1}
+                    value={true}
                     checked={this.props.value === true}
                     onChange={this.handleChange}
-                    radio
                 />
-                <Checkbox
+                <Radio
                     label="False"
-                    value={0}
+                    value={false}
                     checked={this.props.value === false}
                     onChange={this.handleChange}
-                    radio
                 />
 
                 <button

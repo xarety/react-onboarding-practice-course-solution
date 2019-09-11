@@ -1,0 +1,18 @@
+// https://github.com/servicetitan/anvil/issues/462
+.yes-no-confirmation {
+    &.without-message {
+        :global {
+            .Modal__header {
+                border-bottom: none;
+            }
+
+            .Modal__content {
+                display: none;
+            }
+
+            .Modal__footer {
+                border-top: none;
+            }
+        }
+    }
+}

@@ -1,9 +1,11 @@
 {
-    "extends": "stylelint-config-standard",
+    "extends": ["stylelint-config-standard", "stylelint-prettier/recommended"],
     "rules": {
-        "indentation": 4,
-        "selector-pseudo-class-no-unknown": [true, {
-            ignorePseudoClasses: ["global", "local"]
-        }]
+        "selector-pseudo-class-no-unknown": [
+            true,
+            {
+                "ignorePseudoClasses": ["global", "local"]
+            }
+        ]
     }
 }

@@ -1,8 +1,7 @@
 import { injectable, inject } from '@servicetitan/react-ioc';
 
-import { Location } from 'history';
-
-import { KendoGridState, InMemoryDataSource } from '../../common/components/kendo-grid/kendo-grid-state';
+import { InMemoryDataSource } from '../../common/components/kendo-grid/data-sources';
+import { KendoGridState } from '../../common/components/kendo-grid/kendo-grid-state';
 
 import { UsersApi, User, UserRole } from '../api/users.api';
 
@@ -11,8 +10,7 @@ import { setFormStateValues } from '../../common/utils/form-helpers';
 
 @injectable()
 export class ManageUsersStore {
-    gridState = new KendoGridState({
-        idSelector: dataItem => dataItem.id,
+    gridState = new KendoGridState<User, number>({
         getFormState: this.getFormState,
         pageSize: 100
     });
@@ -25,13 +23,9 @@ export class ManageUsersStore {
         try {
             const users = (await this.usersApi.getAll()).data;
 
-            this.gridState.setDataSource(
-                new InMemoryDataSource(users)
-            );
+            this.gridState.setDataSource(new InMemoryDataSource(users, dataItem => dataItem.id));
         } catch {
-            this.gridState.setDataSource(
-                new InMemoryDataSource([])
-            );
+            this.gridState.setDataSource(null);
         }
     }
 
@@ -47,14 +41,6 @@ export class ManageUsersStore {
         );
     }
 
-    confirmNavigation = (currentPathname: string) => (location: Location) => {
-        if (this.gridState.inEdit.size && location.pathname !== currentPathname) {
-            return currentPathname;
-        }
-
-        return true;
-    }
-
     edit(user: User) {
         this.gridState.edit(user);
     }
@@ -64,19 +50,14 @@ export class ManageUsersStore {
     }
 
     save(user: User) {
-        this.gridState.saveEdit(
-            user,
-            async (changes) => {
-                await this.usersApi.update(changes.id, changes);
-            }
-        );
+        this.gridState.saveEdit(user, async changes => {
+            await this.usersApi.update(changes.id, changes);
+        });
     }
 
     async delete(user: User) {
         await this.usersApi.delete(user.id);
 
-        this.gridState.removeFromDataSource(
-            dataItem => dataItem.id === user.id
-        );
+        this.gridState.removeFromDataSource(user.id);
     }
 }

@@ -3,7 +3,7 @@ import { HashRouter, Switch, Route, Redirect } from 'react-router-dom';
 
 import { provide, useDependencies } from '@servicetitan/react-ioc';
 
-import { observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react';
 
 import { Stack } from '@servicetitan/design-system';
 
@@ -16,17 +16,15 @@ import { Menu } from './modules/common/components/menu';
 import { NewsFeed } from './modules/news-feed/components/news-feed';
 import { ManageUsers } from './modules/manage-users/components/manage-users';
 
-import { getUserConfirmation } from './modules/common/components/confirm-navigation/confirm-navigation';
-
-export const App: React.FC = provide({ singletons: [AuthApi, AuthStore] })(observer(
-    () => {
+export const App: React.FC = provide({ singletons: [AuthApi, AuthStore] })(
+    observer(() => {
         const [{ isAuthenticated }] = useDependencies(AuthStore);
 
         return (
-            <HashRouter getUserConfirmation={getUserConfirmation}>
-                <Stack className="flex-auto">
-                    {!isAuthenticated
-                        ? (
+            <React.StrictMode>
+                <HashRouter>
+                    <Stack className="flex-auto">
+                        {!isAuthenticated ? (
                             <AuthRouter />
                         ) : (
                             <React.Fragment>
@@ -41,10 +39,10 @@ export const App: React.FC = provide({ singletons: [AuthApi, AuthStore] })(obser
                                     </Switch>
                                 </Stack.Item>
                             </React.Fragment>
-                        )
-                    }
-                </Stack>
-            </HashRouter>
+                        )}
+                    </Stack>
+                </HashRouter>
+            </React.StrictMode>
         );
-    }
-));
+    })
+);

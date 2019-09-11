@@ -7,13 +7,13 @@ import { NumericTextBox, NumericTextBoxChangeEvent } from '@progress/kendo-react
 import { getEditableCell, EditorProps } from './get-editable-cell';
 
 const Editor = observer<React.FC<EditorProps<number | undefined>>>(
-    ({ field: { value, onChange, hasError, error } }) => {
+    ({ fieldState: { value, onChange, hasError, error }, className }) => {
         const handleChange = (event: NumericTextBoxChangeEvent) => {
             onChange(event.value || undefined);
         };
 
         return (
-            <td>
+            <td className={className}>
                 <NumericTextBox
                     value={value}
                     onChange={handleChange}

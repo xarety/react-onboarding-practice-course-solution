@@ -3,7 +3,7 @@ import { RouteComponentProps } from 'react-router';
 
 import { provide, useDependencies } from '@servicetitan/react-ioc';
 
-import { observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react';
 
 import { Text, Form, Link, ButtonGroup, Button } from '@servicetitan/design-system';
 
@@ -17,12 +17,18 @@ import { Label } from '../../../common/components/label/label';
 
 const rolesOptions = enumToOptions(UserRole);
 
-export const Register: React.FC<RouteComponentProps> = provide({ singletons: [RegisterStore] })(observer(
-    ({ history }) => {
+export const Register: React.FC<RouteComponentProps> = provide({ singletons: [RegisterStore] })(
+    observer(({ history }) => {
         const [registerStore] = useDependencies(RegisterStore);
 
-        const { form: { $: { login, passwords, role } } } = registerStore;
-        const { $: { password, passwordConfirmation } } = passwords;
+        const {
+            form: {
+                $: { login, passwords, role }
+            }
+        } = registerStore;
+        const {
+            $: { password, passwordConfirmation }
+        } = passwords;
 
         const handleSubmit = async () => {
             const isSuccessful = await registerStore.register();
@@ -39,13 +45,7 @@ export const Register: React.FC<RouteComponentProps> = provide({ singletons: [Re
                 </Text>
 
                 <Form.Input
-                    label={
-                        <Label
-                            label="Login"
-                            hasError={login.hasError}
-                            error={login.error}
-                        />
-                    }
+                    label={<Label label="Login" hasError={login.hasError} error={login.error} />}
                     value={login.value}
                     onChange={login.onChangeHandler}
                     error={login.hasError}
@@ -67,10 +67,7 @@ export const Register: React.FC<RouteComponentProps> = provide({ singletons: [Re
 
                 <Form.Input
                     label={
-                        <Label
-                            label="Password Confirmation"
-                            hasError={passwords.hasFormError}
-                        />
+                        <Label label="Password Confirmation" hasError={passwords.hasFormError} />
                     }
                     value={passwordConfirmation.value}
                     onChange={passwordConfirmation.onChangeHandler}
@@ -96,5 +93,5 @@ export const Register: React.FC<RouteComponentProps> = provide({ singletons: [Re
                 </ButtonGroup>
             </Form>
         );
-    }
-));
+    })
+);

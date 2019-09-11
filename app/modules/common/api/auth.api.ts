@@ -16,9 +16,7 @@ export class AuthApi implements IAuthApi {
         const user = UserManagementDB.getByLogin(login);
 
         if (user && user.password === password) {
-            return this.resolve(
-                user
-            );
+            return this.resolve(user);
         }
 
         return this.reject();
@@ -27,17 +25,13 @@ export class AuthApi implements IAuthApi {
     register(data: User): AxiosPromise<User> {
         const user = UserManagementDB.create(data);
 
-        return this.resolve(
-            user
-        );
+        return this.resolve(user);
     }
 
     isLoginInUse(login: string): AxiosPromise<boolean> {
         const user = UserManagementDB.getByLogin(login);
 
-        return this.resolve(
-            !!user
-        );
+        return this.resolve(!!user);
     }
 
     private resolve<T = void>(data?: T) {

@@ -12,9 +12,9 @@ import { renderCustomColumnMenuFilter } from '../column-menu-filters';
 
 @observer
 class TimeFilter extends React.Component<GridColumnMenuFilterUIProps> {
-    @observable operator = this.props.operators.find(
-        o => o.operator === this.props.firstFilterProps.operator
-    ) || this.props.operators[0];
+    @observable operator =
+        this.props.operators.find(o => o.operator === this.props.firstFilterProps.operator) ||
+        this.props.operators[0];
 
     handleChange = (event: TimePickerChangeEvent) => {
         const value = event.value;
@@ -24,7 +24,7 @@ class TimeFilter extends React.Component<GridColumnMenuFilterUIProps> {
             operator: this.props.firstFilterProps.operator,
             syntheticEvent: event.syntheticEvent
         });
-    }
+    };
 
     @action
     handleOperatorChange = (event: DropDownListChangeEvent) => {
@@ -35,7 +35,7 @@ class TimeFilter extends React.Component<GridColumnMenuFilterUIProps> {
             operator: this.operator.operator,
             syntheticEvent: event.syntheticEvent
         });
-    }
+    };
 
     render() {
         return (
@@ -47,7 +47,10 @@ class TimeFilter extends React.Component<GridColumnMenuFilterUIProps> {
                     dataItemKey="operator"
                     textField="text"
                 />
-                <TimePicker value={this.props.firstFilterProps.value} onChange={this.handleChange} />
+                <TimePicker
+                    value={this.props.firstFilterProps.value}
+                    onChange={this.handleChange}
+                />
             </React.Fragment>
         );
     }

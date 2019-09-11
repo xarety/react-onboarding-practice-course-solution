@@ -7,13 +7,13 @@ import { DatePicker, DatePickerChangeEvent } from '@progress/kendo-react-dateinp
 import { getEditableCell, EditorProps } from './get-editable-cell';
 
 const Editor = observer<React.FC<EditorProps<Date | null>>>(
-    ({ field: { value, onChange, hasError, error } }) => {
+    ({ fieldState: { value, onChange, hasError, error }, className }) => {
         const handleChange = (event: DatePickerChangeEvent) => {
             onChange(event.value);
         };
 
         return (
-            <td>
+            <td className={className}>
                 <DatePicker
                     value={value}
                     onChange={handleChange}

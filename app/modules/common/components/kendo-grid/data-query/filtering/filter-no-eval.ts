@@ -1,4 +1,9 @@
-import { CompositeFilterDescriptor, isCompositeFilterDescriptor, FilterDescriptor, getter } from '@progress/kendo-data-query';
+import {
+    CompositeFilterDescriptor,
+    isCompositeFilterDescriptor,
+    FilterDescriptor,
+    getter
+} from '@progress/kendo-data-query';
 import { Predicate } from '@progress/kendo-data-query/dist/npm/common.interfaces';
 import { Preprocessors } from '../common.interfaces';
 import { isNumeric, isDate } from '../utils';
@@ -122,7 +127,7 @@ function typedGetter(prop: Function, initialValue: any, ignoreCase: boolean) {
     if (isDate(value)) {
         return (a: any) => {
             const x = acc(a);
-            
+
             return isDate(x) ? x.getTime() : x;
         };
     }
@@ -131,7 +136,12 @@ function typedGetter(prop: Function, initialValue: any, ignoreCase: boolean) {
 }
 
 function transformFilter<T>(
-    { field: initialField, ignoreCase: initialIgnoreCase, value: initialValue, operator: initialOperator }: FilterDescriptor,
+    {
+        field: initialField,
+        ignoreCase: initialIgnoreCase,
+        value: initialValue,
+        operator: initialOperator
+    }: FilterDescriptor,
     preprocessors: Preprocessors<T> = {}
 ) {
     const field = initialField == null ? (a: T) => a : initialField;
@@ -140,38 +150,39 @@ function transformFilter<T>(
         typeof field === 'function'
             ? field
             : (() => {
-                const prop = getter(field, true);
+                  const prop = getter(field, true);
 
-                return (a: T) => {
-                    const preprocessor = preprocessors[field as keyof T];
-                    const value = prop(a);
+                  return (a: T) => {
+                      const preprocessor = preprocessors[field as keyof T];
+                      const value = prop(a);
 
-                    return preprocessor
-                        ? preprocessor(value)
-                        : value;
-                };
-            })(),
+                      return preprocessor ? preprocessor(value) : value;
+                  };
+              })(),
         initialValue,
         ignoreCase
     );
     const value = convertValue(initialValue, ignoreCase);
-    const operator = typeof initialOperator === 'function'
-        ? initialOperator
-        : operatorsMap[initialOperator as keyof typeof operatorsMap];
+    const operator =
+        typeof initialOperator === 'function'
+            ? initialOperator
+            : operatorsMap[initialOperator as keyof typeof operatorsMap];
 
-    return (
-        (a: T) => operator(itemProp(a), value, ignoreCase)
-    ) as Predicate;
+    return ((a: T) => operator(itemProp(a), value, ignoreCase)) as Predicate;
 }
 
-export function transformCompositeFilter<T>(filter: CompositeFilterDescriptor, preprocessors: Preprocessors<T> = {}): Predicate {
+export function transformCompositeFilter<T>(
+    filter: CompositeFilterDescriptor,
+    preprocessors: Preprocessors<T> = {}
+): Predicate {
     const combiner = logic[filter.logic];
 
-    return filter.filters.filter(
-        x => x
-    ).map(
-        x => isCompositeFilterDescriptor(x)
-            ? transformCompositeFilter(x, preprocessors)
-            : transformFilter(x, preprocessors)
-    ).reduce(combiner.concat, combiner.identity);
+    return filter.filters
+        .filter(x => x)
+        .map(x =>
+            isCompositeFilterDescriptor(x)
+                ? transformCompositeFilter(x, preprocessors)
+                : transformFilter(x, preprocessors)
+        )
+        .reduce(combiner.concat, combiner.identity);
 }

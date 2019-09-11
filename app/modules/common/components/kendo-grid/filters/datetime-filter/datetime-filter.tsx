@@ -7,7 +7,12 @@ import { GridFilterCell } from '@progress/kendo-react-grid';
 import { GridColumnMenuFilterUIProps } from '@progress/kendo-react-grid/dist/npm/interfaces/GridColumnMenuFilterUIProps';
 
 import { DropDownList, DropDownListChangeEvent } from '@progress/kendo-react-dropdowns';
-import { DatePicker, DatePickerChangeEvent, TimePicker, TimePickerChangeEvent } from '@progress/kendo-react-dateinputs';
+import {
+    DatePicker,
+    DatePickerChangeEvent,
+    TimePicker,
+    TimePickerChangeEvent
+} from '@progress/kendo-react-dateinputs';
 
 import { renderCustomColumnMenuFilter } from '../column-menu-filters';
 
@@ -22,7 +27,7 @@ export class DatetimeFilter extends GridFilterCell {
             operator: value ? 'eq' : '',
             syntheticEvent: event.syntheticEvent
         });
-    }
+    };
 
     handleClear = (event: React.MouseEvent) => {
         this.props.onChange({
@@ -30,13 +35,21 @@ export class DatetimeFilter extends GridFilterCell {
             operator: '',
             syntheticEvent: event
         });
-    }
+    };
 
     render() {
         return (
             <div className={Styles.datetimeFilter}>
-                <DatePicker value={this.props.value} onChange={this.handleChange} className="m-r-1" />
-                <TimePicker value={this.props.value} onChange={this.handleChange} className="m-r-1" />
+                <DatePicker
+                    value={this.props.value}
+                    onChange={this.handleChange}
+                    className="m-r-1"
+                />
+                <TimePicker
+                    value={this.props.value}
+                    onChange={this.handleChange}
+                    className="m-r-1"
+                />
 
                 <button
                     className="k-button k-button-icon k-clear-button-visible"
@@ -48,15 +61,14 @@ export class DatetimeFilter extends GridFilterCell {
                 </button>
             </div>
         );
-
     }
 }
 
 @observer
 class DateTimeFilterUI extends React.Component<GridColumnMenuFilterUIProps> {
-    @observable operator = this.props.operators.find(
-        o => o.operator === this.props.firstFilterProps.operator
-    ) || this.props.operators[0];
+    @observable operator =
+        this.props.operators.find(o => o.operator === this.props.firstFilterProps.operator) ||
+        this.props.operators[0];
 
     handleChange = (event: DatePickerChangeEvent | TimePickerChangeEvent) => {
         const value = event.value;
@@ -66,7 +78,7 @@ class DateTimeFilterUI extends React.Component<GridColumnMenuFilterUIProps> {
             operator: this.props.firstFilterProps.operator,
             syntheticEvent: event.syntheticEvent
         });
-    }
+    };
 
     @action
     handleOperatorChange = (event: DropDownListChangeEvent) => {
@@ -77,7 +89,7 @@ class DateTimeFilterUI extends React.Component<GridColumnMenuFilterUIProps> {
             operator: this.operator.operator,
             syntheticEvent: event.syntheticEvent
         });
-    }
+    };
 
     render() {
         return (
@@ -89,8 +101,14 @@ class DateTimeFilterUI extends React.Component<GridColumnMenuFilterUIProps> {
                     dataItemKey="operator"
                     textField="text"
                 />
-                <DatePicker value={this.props.firstFilterProps.value} onChange={this.handleChange} />
-                <TimePicker value={this.props.firstFilterProps.value} onChange={this.handleChange} />
+                <DatePicker
+                    value={this.props.firstFilterProps.value}
+                    onChange={this.handleChange}
+                />
+                <TimePicker
+                    value={this.props.firstFilterProps.value}
+                    onChange={this.handleChange}
+                />
             </React.Fragment>
         );
     }

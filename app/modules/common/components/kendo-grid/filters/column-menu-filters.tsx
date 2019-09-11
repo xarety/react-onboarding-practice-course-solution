@@ -10,11 +10,6 @@ export function renderCustomColumnMenuFilter(
     filterUI: React.ComponentType<GridColumnMenuFilterUIProps>
 ) {
     return (props: GridColumnMenuProps) => (
-        <GridColumnMenuFilter
-            {...props}
-            filterUI={filterUI}
-            expanded
-            hideSecondFilter
-        />
+        <GridColumnMenuFilter {...props} filterUI={filterUI} expanded hideSecondFilter />
     );
 }

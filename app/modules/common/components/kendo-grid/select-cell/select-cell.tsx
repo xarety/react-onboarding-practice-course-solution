@@ -5,6 +5,7 @@ import * as Styles from './select-cell.less';
 
 interface SelectColumnCellProps extends GridCellProps {
     isRowUnselectable?: (item: any) => boolean;
+    limitReached?: boolean;
 }
 
 interface SelectHeaderCellProps extends GridHeaderCellProps {
@@ -18,19 +19,18 @@ interface SelectCellProps {
     selectionChange?: (event: { syntheticEvent: React.SyntheticEvent<any> }) => void;
 }
 
-export const SelectCell: React.FC<SelectCellProps> = (props: SelectCellProps) => {
-    const onChange = (event: React.SyntheticEvent<HTMLInputElement>) => {
-        if (!props.selectionChange) { return; }
-        props.selectionChange({ syntheticEvent: event });
+export const SelectCell: React.FC<SelectCellProps> = ({
+    selectionChange,
+    ...props
+}: SelectCellProps) => {
+    const onChange = (_0: never, _1: boolean, event: React.SyntheticEvent<HTMLInputElement>) => {
+        if (!selectionChange) {
+            return;
+        }
+        selectionChange({ syntheticEvent: event });
     };
 
-    return (
-        <Checkbox
-            className={Styles.checkbox}
-            onChange={onChange}
-            {...props}
-        />
-    );
+    return <Checkbox className={Styles.checkbox} onChange={onChange} {...props} />;
 };
 
 export const SelectColumnCell: React.FC<SelectColumnCellProps> = (props: SelectColumnCellProps) => {
@@ -42,12 +42,20 @@ export const SelectColumnCell: React.FC<SelectColumnCellProps> = (props: SelectC
         return <td />;
     }
 
+    const disabled =
+        (props.isRowUnselectable && props.isRowUnselectable(props.dataItem)) ||
+        (!props.dataItem.selected && props.limitReached);
+
     return (
-        <td>
+        <td style={props.style}>
             <SelectCell
                 checked={props.dataItem.selected}
-                disabled={props.isRowUnselectable && props.isRowUnselectable(props.dataItem)}
-                selectionChange={props.selectionChange}
+                disabled={disabled}
+                selectionChange={
+                    !disabled // FIXME: https://github.com/servicetitan/anvil/issues/501
+                        ? props.selectionChange
+                        : undefined
+                }
             />
         </td>
     );

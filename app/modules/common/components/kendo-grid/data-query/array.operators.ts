@@ -1,5 +1,17 @@
-import { State, SortDescriptor, DataResult, normalizeFilters, normalizeGroups } from '@progress/kendo-data-query';
-import { exec, skip as skipTransformer, take as takeTransformer, filter as filterTransformer, concat as concatTransformer } from '@progress/kendo-data-query/dist/npm/transducers';
+import {
+    State,
+    SortDescriptor,
+    DataResult,
+    normalizeFilters,
+    normalizeGroups
+} from '@progress/kendo-data-query';
+import {
+    exec,
+    skip as skipTransformer,
+    take as takeTransformer,
+    filter as filterTransformer,
+    concat as concatTransformer
+} from '@progress/kendo-data-query/dist/npm/transducers';
 import { count } from '@progress/kendo-data-query/dist/npm/array.operators';
 import { Predicate } from '@progress/kendo-data-query/dist/npm/common.interfaces';
 import { sort } from '@progress/kendo-data-query/dist/npm/sorting/sort';
@@ -9,7 +21,11 @@ import { composeSortDescriptors } from './sorting/sort-array.operator';
 import { groupBy } from './grouping/group.operators';
 import { Preprocessors } from './common.interfaces';
 
-export function orderBy<T>(initialData: T[], descriptors: SortDescriptor[], preprocessors: Preprocessors<T> = {}) {
+export function orderBy<T>(
+    initialData: T[],
+    descriptors: SortDescriptor[],
+    preprocessors: Preprocessors<T> = {}
+) {
     let data = initialData;
 
     if (descriptors.some(x => !!x.dir)) {
@@ -28,15 +44,16 @@ export function limit<T>(data: T[], predicate: Predicate | undefined) {
     return data;
 }
 
-export function process<T>(data: T[], state: State, preprocessors: Preprocessors<T> = {}): DataResult {
+export function process<T>(
+    data: T[],
+    state: State,
+    preprocessors: Preprocessors<T> = {}
+): DataResult {
     const { skip, take, filter, sort, group } = state;
 
     let total = data.length;
 
-    const sortDescriptors = [
-        ...normalizeGroups(group || []),
-        ...sort || []
-    ];
+    const sortDescriptors = [...normalizeGroups(group || []), ...(sort || [])];
     const orderedData = sortDescriptors.length
         ? orderBy(data, sortDescriptors, preprocessors)
         : data;
@@ -46,9 +63,7 @@ export function process<T>(data: T[], state: State, preprocessors: Preprocessors
     if (!hasFilters && !hasGroups) {
         return {
             total,
-            data: take != null
-                ? orderedData.slice(skip, skip! + take)
-                : orderedData
+            data: take != null ? orderedData.slice(skip, skip! + take) : orderedData
         };
     }
 
@@ -56,10 +71,7 @@ export function process<T>(data: T[], state: State, preprocessors: Preprocessors
     const transformers = [];
 
     if (hasFilters) {
-        predicate = compileFilter(
-            normalizeFilters(filter!),
-            preprocessors
-        );
+        predicate = compileFilter(normalizeFilters(filter!), preprocessors);
         transformers.push(filterTransformer(predicate));
         total = count(orderedData, predicate);
     }
@@ -83,8 +95,6 @@ export function process<T>(data: T[], state: State, preprocessors: Preprocessors
 
     return {
         total,
-        data: hasGroups
-            ? groupBy(orderedData, group, preprocessors)
-            : orderedData
+        data: hasGroups ? groupBy(orderedData, group, preprocessors) : orderedData
     };
 }

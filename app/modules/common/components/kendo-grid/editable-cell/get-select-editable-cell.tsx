@@ -4,21 +4,35 @@ import { observer } from 'mobx-react';
 
 import { DropDownList, DropDownListChangeEvent } from '@progress/kendo-react-dropdowns';
 
+import { KendoGridCellProps } from '../kendo-grid';
 import { getEditableCell, EditorProps } from './get-editable-cell';
 
-export function getSelectEditableCell<T>(data: T[]) {
+import { Option } from '../../../utils/form-helpers';
+
+import * as classNames from 'classnames';
+
+interface GetSelectEditableCellParams<T> {
+    options: Option<T>[];
+    viewer?: React.ComponentType<KendoGridCellProps<any>>;
+}
+
+export function getSelectEditableCell<T>({ options, viewer }: GetSelectEditableCellParams<T>) {
     const Editor = observer<React.FC<EditorProps<T>>>(
-        ({ field: { value, onChange, hasError, error } }) => {
+        ({ fieldState: { value, onChange, hasError, error }, className }) => {
+            const selected = options.find(option => option.value === value);
+
             const handleChange = (event: DropDownListChangeEvent) => {
-                onChange(event.target.value);
+                onChange(event.target.value.value);
             };
 
             return (
-                <td className="of-visible">
+                <td className={classNames('of-visible', className)}>
                     <DropDownList
-                        data={data}
-                        value={value}
+                        data={options}
+                        value={selected}
                         onChange={handleChange}
+                        dataItemKey="value"
+                        textField="text"
                         valid={!hasError}
                         validationMessage={error}
                         className="w-100"
@@ -29,6 +43,7 @@ export function getSelectEditableCell<T>(data: T[]) {
     );
 
     return getEditableCell({
+        viewer,
         editor: Editor
     });
-} 
+}

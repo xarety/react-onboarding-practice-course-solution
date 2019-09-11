@@ -20,18 +20,18 @@ export const Menu: React.FC<MenuProps> = ({ className }) => {
     };
 
     return (
-        <SideNav title="React Onboarding Practice Course" className={className} style={{ width: 240 }}>
-            <SideNavLinkItem pathname="/users">
-                Users
-            </SideNavLinkItem>
+        <SideNav
+            title="React Onboarding Practice Course"
+            className={className}
+            style={{ width: 240 }}
+        >
+            <SideNavLinkItem pathname="/users">Users</SideNavLinkItem>
 
             <SideNavLinkItem pathname="/news-feed" className="m-b-4">
                 News Feed
             </SideNavLinkItem>
 
-            <SideNav.Item onClick={handleLogout}>
-                Logout
-            </SideNav.Item>
+            <SideNav.Item onClick={handleLogout}>Logout</SideNav.Item>
         </SideNav>
     );
 };

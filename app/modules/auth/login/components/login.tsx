@@ -3,18 +3,20 @@ import { RouteComponentProps } from 'react-router';
 
 import { useDependencies, provide } from '@servicetitan/react-ioc';
 
-import { observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react';
 
 import { Text, Form, Link, ButtonGroup, Button, Banner } from '@servicetitan/design-system';
 
 import { LoginStore } from '../stores/login.store';
 
-export const Login: React.FC<RouteComponentProps> = provide({ singletons: [LoginStore] })(observer(
-    ({ history }) => {
+export const Login: React.FC<RouteComponentProps> = provide({ singletons: [LoginStore] })(
+    observer(({ history }) => {
         const [loginStore] = useDependencies(LoginStore);
 
         const { form, isDirty, error } = loginStore;
-        const { $: { login, password } } = form;
+        const {
+            $: { login, password }
+        } = form;
 
         const handleSubmit = async () => {
             const isSuccessful = await loginStore.login();
@@ -30,13 +32,7 @@ export const Login: React.FC<RouteComponentProps> = provide({ singletons: [Login
                     Login
                 </Text>
 
-                {error && (
-                    <Banner
-                        status="critical"
-                        title={error}
-                        className="m-b-3"
-                    />
-                )}
+                {error && <Banner status="critical" title={error} className="m-b-3" />}
 
                 <Form.Input
                     label="Login"
@@ -64,5 +60,5 @@ export const Login: React.FC<RouteComponentProps> = provide({ singletons: [Login
                 </ButtonGroup>
             </Form>
         );
-    }
-));
+    })
+);

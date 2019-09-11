@@ -17,12 +17,10 @@ export interface INewsFeedApi {
 
 @injectable()
 export class NewsFeedApi implements INewsFeedApi {
-    constructor(@inject(AuthStore) private readonly authStore: AuthStore) { }
+    constructor(@inject(AuthStore) private readonly authStore: AuthStore) {}
 
     getAll(): AxiosPromise<Post[]> {
-        return this.resolve(
-            NewsFeedDB.getAll()
-        );
+        return this.resolve(NewsFeedDB.getAll());
     }
 
     create(data: EditablePost): AxiosPromise<Post> {
@@ -34,9 +32,7 @@ export class NewsFeedApi implements INewsFeedApi {
 
         const post = NewsFeedDB.create(data, user);
 
-        return this.resolve(
-            post
-        );
+        return this.resolve(post);
     }
 
     update(id: number, changes: EditablePost): AxiosPromise<void> {

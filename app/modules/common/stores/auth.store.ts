@@ -13,7 +13,7 @@ export class AuthStore {
         return !!this.user;
     }
 
-    constructor(@inject(AuthApi) private readonly authApi: AuthApi) { }
+    constructor(@inject(AuthApi) private readonly authApi: AuthApi) {}
 
     async login(request: LoginRequest) {
         try {

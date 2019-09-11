@@ -5,7 +5,6 @@ import { SideNav } from '@servicetitan/design-system';
 interface SideNavLinkItemProps extends RouteComponentProps<void> {
     className?: string;
     exact?: boolean;
-    ['qa-testing']?: string;
     pathname: string;
 }
 
@@ -16,14 +15,16 @@ const SideNavLinkItemUnwrapped: React.FC<SideNavLinkItemProps> = ({
     history,
     ...props
 }) => {
-    const { ['qa-testing']: elementLocator } = props;
     const gotoLink = () => history.push(pathname);
     return (
         <SideNav.Item
             className={className}
             onClick={gotoLink}
-            active={exact ? history.location.pathname === pathname : history.location.pathname.startsWith(pathname)}
-            qa-testing={elementLocator}
+            active={
+                exact
+                    ? history.location.pathname === pathname
+                    : history.location.pathname.startsWith(pathname)
+            }
         >
             {props.children}
         </SideNav.Item>

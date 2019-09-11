@@ -10,8 +10,9 @@ import { renderCustomColumnMenuFilter } from '../column-menu-filters';
 import * as Styles from './range-filter.less';
 
 // TODO: remove when Kendo fix the propType bug of DatePicker
-interface ComponentClassWithBrokenPropTypes<P = {}, S = React.ComponentState> extends React.StaticLifecycle<P, S> {
-    new(props: P, context?: any): React.Component<P, S>;
+interface ComponentClassWithBrokenPropTypes<P = {}, S = React.ComponentState>
+    extends React.StaticLifecycle<P, S> {
+    new (props: P, context?: any): React.Component<P, S>;
     propTypes?: any;
     contextTypes?: React.ValidationMap<any>;
     childContextTypes?: React.ValidationMap<any>;
@@ -53,26 +54,30 @@ export abstract class RangeFilterBase<T, TProps = void> extends GridFilterCell {
 
     /** override this if additional type support needed */
     inRange(current: T, values: Range<T>) {
-        return (values.min === null || current >= values.min)
-            && (values.max === null || current <= values.max);
+        return (
+            (values.min === null || current >= values.min) &&
+            (values.max === null || current <= values.max)
+        );
     }
 
     protected onChange = (ev: any) => {
-        if (!this.minValueBox || !this.maxValueBox) { return; }
+        if (!this.minValueBox || !this.maxValueBox) {
+            return;
+        }
         this.props.onChange({
             value: { min: this.minValueBox.value, max: this.maxValueBox.value },
             operator: this.inRange,
             syntheticEvent: ev.syntheticEvent
         });
-    }
+    };
 
     protected setMinValueRef = (el: RangeControl<T, TProps> | null) => {
         this.minValueBox = el;
-    }
+    };
 
     protected setMaxValueRef = (el: RangeControl<T, TProps> | null) => {
         this.maxValueBox = el;
-    }
+    };
 
     protected onClear = (ev: React.SyntheticEvent) => {
         ev.preventDefault();
@@ -81,7 +86,7 @@ export abstract class RangeFilterBase<T, TProps = void> extends GridFilterCell {
             operator: '',
             syntheticEvent: ev
         });
-    }
+    };
 
     render() {
         const filterValue = this.props.value;
@@ -143,8 +148,7 @@ export class DateRangeFilter extends RangeFilterBase<Date> {
 
 export class TimeRangeFilter extends RangeFilterBase<Date> {
     inRange(current: Date, values: Range<Date>) {
-
-        function getTimeString(date: Date) {            
+        function getTimeString(date: Date) {
             return `${date.getHours()}:${date.getMinutes()}`;
         }
 
@@ -175,26 +179,30 @@ class RangeFilterUIBase<T, TProps = void> extends React.Component<GridColumnMenu
 
     /** override this if additional type support needed */
     inRange(current: T, values: Range<T>) {
-        return (values.min === null || current >= values.min)
-            && (values.max === null || current <= values.max);
+        return (
+            (values.min === null || current >= values.min) &&
+            (values.max === null || current <= values.max)
+        );
     }
 
     onChange = (ev: any) => {
-        if (!this.minValueBox || !this.maxValueBox) { return; }
+        if (!this.minValueBox || !this.maxValueBox) {
+            return;
+        }
         this.props.firstFilterProps.onChange({
             value: { min: this.minValueBox.value, max: this.maxValueBox.value },
             operator: this.inRange,
             syntheticEvent: ev.syntheticEvent
         });
-    }
+    };
 
     protected setMinValueRef = (el: RangeControl<T, TProps> | null) => {
         this.minValueBox = el;
-    }
+    };
 
     protected setMaxValueRef = (el: RangeControl<T, TProps> | null) => {
         this.maxValueBox = el;
-    }
+    };
 
     render() {
         const filterValue = this.props.firstFilterProps.value;
@@ -202,7 +210,7 @@ class RangeFilterUIBase<T, TProps = void> extends React.Component<GridColumnMenu
         return (
             <React.Fragment>
                 <span>From:</span>
-                <span className={Styles.from} >
+                <span className={Styles.from}>
                     <Control
                         {...this.controlProps}
                         value={filterValue && filterValue.min}
@@ -219,7 +227,7 @@ class RangeFilterUIBase<T, TProps = void> extends React.Component<GridColumnMenu
                         onChange={this.onChange}
                     />
                 </span>
-            </React.Fragment >
+            </React.Fragment>
         );
     }
 }

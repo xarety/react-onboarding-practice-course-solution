@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { provide, useDependencies } from '@servicetitan/react-ioc';
 
-import { observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react';
 
 import { Modal, Form, Button } from '@servicetitan/design-system';
 
@@ -16,19 +16,18 @@ interface EditFormProps {
     onCancel(): void;
 }
 
-export const EditForm: React.FC<EditFormProps> = provide({ singletons: [EditFormStore] })(observer(
-    ({ post, onSave, onCancel }) => {
+export const EditForm: React.FC<EditFormProps> = provide({ singletons: [EditFormStore] })(
+    observer(({ post, onSave, onCancel }) => {
         const [editFormStore] = useDependencies(EditFormStore);
 
         const { form, isDirty } = editFormStore;
-        const { $: { title, description } } = form;
+        const {
+            $: { title, description }
+        } = form;
 
-        React.useEffect(
-            () => {
-                editFormStore.initialize(post);
-            },
-            []
-        );
+        React.useEffect(() => {
+            editFormStore.initialize(post);
+        }, [editFormStore, post]);
 
         const handleSaveClick = async () => {
             const changes = await editFormStore.export();
@@ -41,19 +40,17 @@ export const EditForm: React.FC<EditFormProps> = provide({ singletons: [EditForm
         return (
             <Modal
                 open
-                title={
-                    post
-                        ? 'Edit Post'
-                        : 'Create Post'
-                }
+                title={post ? 'Edit Post' : 'Create Post'}
                 size={Modal.Sizes.S}
                 footer={
                     <React.Fragment>
-                        <Button onClick={onCancel}>
-                            Cancel
-                        </Button>
+                        <Button onClick={onCancel}>Cancel</Button>
 
-                        <Button primary disabled={!isDirty || form.hasError} onClick={handleSaveClick}>
+                        <Button
+                            primary
+                            disabled={!isDirty || form.hasError}
+                            onClick={handleSaveClick}
+                        >
                             Save
                         </Button>
                     </React.Fragment>
@@ -78,5 +75,5 @@ export const EditForm: React.FC<EditFormProps> = provide({ singletons: [EditForm
                 </Form>
             </Modal>
         );
-    }
-));
+    })
+);
